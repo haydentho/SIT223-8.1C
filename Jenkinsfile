@@ -38,6 +38,12 @@ pipeline {
                 echo 'Deploying the application to the production environment using AWS'
             }
         }
+        stage('Complete') {
+            steps {
+                echo 'Completed...'
+            }
+        }
     }
 }
+
 
