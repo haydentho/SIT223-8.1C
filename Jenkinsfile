@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     stages {
-        stage('Builddddd') {
+        stage('Build') {
             steps {
                 echo 'Compiling and building the application with Maven'
             }
@@ -45,4 +45,5 @@ pipeline {
         }
     }
 }
+
 
