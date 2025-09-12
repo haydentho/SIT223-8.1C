@@ -2,50 +2,46 @@ pipeline {
     agent any
 
     stages {
-        stage('Build') {
-            steps {
-                echo 'Compiling and building the application with Maven'
-            }
-        }
-        stage('Unit and Integration Tests') {
-            steps {
-                echo 'Running unit tests with Jest to verify components work as expected'
-                echo 'Running integration tests with TestNG to ensure components interact correctly'
-            }
-        }
-        stage('Code Analysis') {
-            steps {
-                echo 'Testing code quality using SonarQube to detect issues'
-            }
-        }
         stage('Security Scan') {
             steps {
-                echo 'Scanning the project for vulnerabilities using OWASP ZAP'
+                echo 'Running security scan'
             }
         }
+
         stage('Deploy to Staging') {
             steps {
-                echo 'Deploying the application AWS'
+                echo 'Deploying to AWS EC2 staging server'
             }
         }
+
         stage('Integration Tests on Staging') {
             steps {
-                echo 'Running integration and functional tests using Selenium'
+                echo 'Running staging tests using Postman'
             }
         }
+
         stage('Deploy to Production') {
             steps {
-                echo 'Deploying the application to the production environment using AWS'
-            }
-        }
-        stage('Complete') {
-            steps {
-                echo 'Completed...'
+                echo 'Deploying to production server on AWS EC2'
             }
         }
     }
+
+    post {
+        success {
+            emailext (
+                to: 'hltmelb@outlook.com',
+                subject: "SUCCESS: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
+                body: "The build was successful!\nCheck the details here: ${env.BUILD_URL}"
+            )
+        }
+
+        failure {
+            emailext (
+                to: 'hltmelb@outlook.com',
+                subject: "FAILURE: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
+                body: "The build has failed.\nCheck the details here: ${env.BUILD_URL}"
+            )
+        }
+    }
 }
-
-
-
-
